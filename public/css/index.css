@@ -1,0 +1,13 @@
+.mensajes {
+    display: inline-block;
+}
+
+.mensajes.error {
+    background-color: red;
+    color: white;
+}
+
+.mensajes.ok {
+    background-color: green;
+    color: white;
+}
