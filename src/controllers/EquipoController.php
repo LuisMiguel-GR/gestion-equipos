@@ -3,14 +3,17 @@
 require_once  __DIR__ . "/../../app/View.php";
 require_once __DIR__ . "/../repositories/EquipoRepository.php";
 require_once __DIR__ . "/../repositories/DeporteRepository.php";
+require_once __DIR__ . "/../repositories/JugadorRepository.php";
 
 class EquipoController {
 
     private $equipoRepository;
     private $deporteRepository;
+    private $jugadorRepository;
     public function __construct($pdo) {
         $this->equipoRepository = new EquipoRepository($pdo);
         $this->deporteRepository = new DeporteRepository($pdo);
+        $this->jugadorRepository = new JugadorRepository($pdo);
     }
     public function index() {
         $data = $this->equipoRepository->getAllEquipos();
@@ -39,12 +42,13 @@ class EquipoController {
             if (!$fechaValida) {
                 $fechaCreacion = date("Y-m-d");
             }
-    
+
             $equipo = new Equipo(
                 null,
                 $_POST["nombre"],
                 $_POST["ciudad"],
                 $_POST["deporte"],
+                $_POST["capitan"] ?? null,
                 $fechaCreacion
             );
     
@@ -61,7 +65,9 @@ class EquipoController {
     public function editEquipo($id) {
         $deportes = $this->deporteRepository->getAllDeportes();
         $equipo = $this->equipoRepository->getEquipoById($id);
-        View::render("Equipo/edit", ["equipo" => $equipo, "deportes" => $deportes]);
+        $jugadores = $this->jugadorRepository->getAllJugadoresByEquipo($id);
+
+        View::render("Equipo/edit", ["equipo" => $equipo, "deportes" => $deportes, "jugadores" => $jugadores]);
     }
 
     public function updateEquipo($id) {
@@ -79,13 +85,14 @@ class EquipoController {
             $_POST["nombre"],
             $_POST["ciudad"],
             $_POST["deporte"],
+            $_POST["capitan"] ?? null,
              $_POST["fecha_creacion"]
         );
         $this->equipoRepository->updateEquipo($equipo);
-        $equipo = $this->equipoRepository->getEquipoById($equipo->getId());
+        $jugadores = $this->jugadorRepository->getAllJugadoresByEquipo($id);
 
         $_SESSION["mensajeExito"] = "Actualizado con exito";
-        View::render("Equipo/edit", ["equipo" => $equipo, "deportes" => $deportes]);
+        View::render("Equipo/edit", ["equipo" => $equipo, "deportes" => $deportes, "jugadores" => $jugadores]);
     }
 
     public function deleteEquipo($id) {

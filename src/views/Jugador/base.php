@@ -1,9 +1,8 @@
 <html>
     <head>
-        <link rel="stylesheet" href="/css/index.css">
+    <link rel="stylesheet" href="/css/index.css">
     </head>
     <body>
-        <script src="/js/equipo/index.js"></script>
         <script src="/js/jugador/index.js"></script>
         <br><br>
         <?php if (isset($_SESSION["mensajeError"])): ?>
