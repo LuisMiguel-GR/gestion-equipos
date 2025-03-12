@@ -1,0 +1,40 @@
+CREATE DATABASE IF NOT EXISTS gestor;
+USE gestor;
+
+CREATE TABLE deportes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL
+);
+
+INSERT INTO deportes (nombre) VALUES 
+('Futbol'),
+('Baloncesto'),
+('Tenis'),
+('Natacion'),
+('Ciclismo');
+
+CREATE TABLE jugadores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    numero INT NOT NULL,
+    fecha_creacion DATE NOT NULL
+);
+
+CREATE TABLE equipos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(255) NOT NULL,
+    ciudad VARCHAR(255) NOT NULL,
+    deporte INT DEFAULT NULL,
+    capitan INT DEFAULT NULL,
+    fecha_creacion DATE NOT NULL,
+    FOREIGN KEY (deporte) REFERENCES deportes(id) ON DELETE SET NULL,
+    FOREIGN KEY (capitan) REFERENCES jugadores(id) ON DELETE SET NULL
+);
+
+CREATE TABLE rel_equipos_jugadores (
+    equipo_id INT,
+    jugador_id INT,
+    PRIMARY KEY (equipo_id, jugador_id),
+    FOREIGN KEY (equipo_id) REFERENCES equipos(id) ON DELETE CASCADE,
+    FOREIGN KEY (jugador_id) REFERENCES jugadores(id) ON DELETE CASCADE
+);
